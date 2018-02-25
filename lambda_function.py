@@ -10,7 +10,10 @@ def build_response(**kwargs):
 
 
 def create_token(name: str='default'):
-    return boto3.client('sts').assume_role(RoleArn=os.environ.get('ROLE'), RoleSessionName=name)
+    response = boto3.client('sts').assume_role(RoleArn=os.environ.get('ROLE'), RoleSessionName=name)
+    credentials = response['Credentials']
+    credentials['Expiration'] = credentials['Expiration'].strftime('%Y-%M-%d %H:%M:%S')
+    return {'Credentials': credentials}
 
 
 def github_login(username: str, password: str) -> bool:
@@ -19,9 +22,8 @@ def github_login(username: str, password: str) -> bool:
 
 
 def lambda_handler(event, context):
-    # response = sts.assume_role(RoleArn=role_arn, RoleSessionName='default')
-    response = build_response(message='hello world')
-    return response
+    payload = create_token()
+    return build_response(**payload)
 
 
 if __name__ == '__main__':
