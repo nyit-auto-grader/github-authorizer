@@ -10,16 +10,17 @@ phases:
       - echo Entered the pre_build phase...
       - python -m venv evnv
       - source venv/bin/activate
-      - export HERE=```pwd```
-      - cd venv/lib/python3.6/site-packages
-      - zip -r9 /tmp/auto-grader-build.zip *
-      - cd ${HERE}
-      - zip -g /tmp/auto-grader-build.zip lambda_function.py
-      - mv /tmp/auto-grader-build.zip github-authorizer.zip
+      - pip install -U pip setuptools
   build:
     commands:
       - echo Entered the build phase...
       - echo Build started on `date`
+      - export HERE=```pwd```
+      - cd venv/lib/python3.5/site-packages
+      - zip -r9 /tmp/auto-grader-build.zip *
+      - cd ${HERE}
+      - zip -g /tmp/auto-grader-build.zip lambda_function.py
+      - mv /tmp/auto-grader-build.zip github-authorizer.zip
   post_build:
     commands:
       - echo Entered the post_build phase...
