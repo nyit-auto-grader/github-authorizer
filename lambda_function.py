@@ -25,9 +25,9 @@ def github_login(username: str, password: str) -> bool:
 def lambda_handler(event, context):
     body = json.loads(event['body'])
     if github_login(body['username'], body['password']):
-        return build_response(data=create_token())
+        return build_response(data=create_token(body['username']))
     else:
-        return build_response(statusCode=404)
+        return build_response(statusCode=401, message='invalid username of password')
 
 
 if __name__ == '__main__':
@@ -35,4 +35,4 @@ if __name__ == '__main__':
     password = getpass('enter your github password: ')
 
     if github_login(username, password):
-        token = create_token()
+        token = create_token(username)
